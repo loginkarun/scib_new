@@ -1,0 +1,81 @@
+{
+  "id": "scrum-11693-test-env",
+  "name": "SCRUM-11693 Test Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "authToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IlVzZXIgQSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "cartId",
+      "value": "123",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "lowValueCartId",
+      "value": "30",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "highValueCartId",
+      "value": "1000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "eligibleProductCartId",
+      "value": "101",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "ineligibleProductCartId",
+      "value": "202",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "otherUserCartId",
+      "value": "999",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "appliedCartId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "validCouponCode",
+      "value": "SAVE10",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "expiredCouponCode",
+      "value": "EXPIRED10",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "invalidCouponCode",
+      "value": "INVALID123",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-01-08T12:00:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}
