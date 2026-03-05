@@ -1,0 +1,69 @@
+{
+  "executive_summary": "Build attempt #1 failed due to GitHub Actions workflow dispatch error. No Maven build was executed as the workflow could not be triggered successfully.",
+  "attempt_number": 1,
+  "action_url": "",
+  "timestamp": "2024-01-01T00:00:00Z",
+  "errors": [
+    {
+      "category": "CONFIGURATION_ERROR",
+      "severity": "CRITICAL",
+      "error_type": "GitHub Actions Workflow Dispatch Failure",
+      "description": "Failed to dispatch GitHub Actions workflow with HTTP 500 Internal Server Error",
+      "error_message": "HTTP Error 500: Internal Server Error. Failed to run workflow dispatch",
+      "location": "GitHub Actions API",
+      "api_endpoint": "https://api.github.com/repos/loginkarun/scib_new/actions/workflows/.github%2Fworkflows%2Fbuild.yml/dispatches",
+      "root_cause": "GitHub API returned 500 error when attempting to trigger workflow dispatch event",
+      "impact": "Build cannot be executed - workflow was never started",
+      "recommended_fix": [
+        "Verify GitHub Actions workflow file exists at .github/workflows/build.yml",
+        "Check workflow file syntax and YAML formatting",
+        "Ensure workflow has 'workflow_dispatch' trigger configured",
+        "Verify repository permissions and GitHub token has 'actions:write' scope",
+        "Check GitHub Actions service status at https://www.githubstatus.com/",
+        "Retry the workflow dispatch after a brief delay",
+        "If persistent, contact GitHub Support or check repository settings"
+      ],
+      "automated_remediation": {
+        "action": "VERIFY_WORKFLOW_CONFIG",
+        "steps": [
+          "Read .github/workflows/build.yml to verify it exists",
+          "Validate YAML syntax",
+          "Confirm workflow_dispatch trigger is present",
+          "Retry dispatch with exponential backoff"
+        ],
+        "compliance_notes": "Workflow dispatch failures must be logged for audit trail. Retry attempts should be rate-limited per GitHub API guidelines."
+      },
+      "compliance_impact": "HIGH - Build process cannot proceed, blocking CI/CD pipeline",
+      "audit_trail": {
+        "error_detected_at": "attempt-1",
+        "classification": "CONFIGURATION_ERROR",
+        "requires_manual_intervention": true,
+        "escalation_required": false
+      }
+    }
+  ],
+  "summary": {
+    "total_errors": 1,
+    "critical_errors": 1,
+    "error_categories": {
+      "CONFIGURATION_ERROR": 1
+    },
+    "build_phase": "PRE_BUILD",
+    "build_status": "NOT_STARTED",
+    "can_auto_remediate": false,
+    "requires_investigation": true,
+    "next_steps": [
+      "Verify workflow configuration file exists and is valid",
+      "Check GitHub Actions service availability",
+      "Validate repository permissions and token scopes",
+      "Retry workflow dispatch"
+    ]
+  },
+  "metadata": {
+    "classifier_version": "1.0",
+    "classification_timestamp": "2024-01-01T00:00:00Z",
+    "repository": "loginkarun/scib_new",
+    "branch": "main",
+    "analysis_engine": "DevOps Automation Agent v1.0"
+  }
+}
