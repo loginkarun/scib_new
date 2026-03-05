@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Main SpringBoot Application class for myproject
- * Handles cart coupon management operations
+ * Main application class for myproject SpringBoot application.
+ * Handles cart coupon management operations.
  */
 @SpringBootApplication
 public class MyprojectApplication {
