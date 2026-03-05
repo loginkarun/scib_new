@@ -1,15 +1,13 @@
 package com.myproject.models.dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for cart item
+ * DTO representing a cart item.
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem {
