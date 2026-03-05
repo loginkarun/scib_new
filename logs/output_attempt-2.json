@@ -1,1 +1,0 @@
-{"status": "failure", "attempts": 3, "api_url": "", "repo": "scib_new", "branch": "main", "source_folder": "code", "last_error": "Fix workflow failed", "non_retryable": false, "history": [{"attempt": 1, "fix_workflow_error": "Fix workflow failed"}, {"attempt": 2, "fix_workflow_error": "Fix workflow failed"}, {"attempt": 3, "fix_workflow_error": "Fix workflow failed"}]}
