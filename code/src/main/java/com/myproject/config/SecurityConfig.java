@@ -8,26 +8,28 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Security configuration for the application.
- * Configures endpoint security and authentication.
+ * Security configuration
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/api/**", "/h2-console/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
-
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+            );
+        
         return http.build();
     }
 }
