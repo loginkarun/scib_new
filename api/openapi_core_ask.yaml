@@ -1,0 +1,273 @@
+openapi: 3.0.3
+info:
+  title: core_ask API
+  version: 1.0.0
+  description: Generated from LLD batch in pipeline SCRUM-11693
+servers:
+  - url: https://example.com
+    description: Production server
+tags:
+  - name: cart-coupon
+    description: Cart coupon operations for applying and removing coupons
+paths:
+  /api/cart/{cartId}/coupon:
+    post:
+      tags:
+        - cart-coupon
+      summary: Apply coupon to cart
+      description: Applies a valid coupon code to the specified cart and updates the cart total
+      operationId: SCRUM-11693_apply_coupon_post
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: The unique identifier of the cart
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyCouponRequest'
+      responses:
+        '200':
+          description: Coupon applied successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          description: Invalid coupon code or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - cart-coupon
+      summary: Remove coupon from cart
+      description: Removes the applied coupon from the specified cart and recalculates the cart total
+      operationId: SCRUM-11693_remove_coupon_delete
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: The unique identifier of the cart
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Coupon removed successfully
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/coupon/validate:
+    post:
+      tags:
+        - cart-coupon
+      summary: Validate coupon code
+      description: Validates a coupon code for applicability to a specific cart
+      operationId: SCRUM-11693_validate_coupon_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateCouponRequest'
+      responses:
+        '200':
+          description: Coupon validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponValidationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ApplyCouponRequest:
+      type: object
+      required:
+        - couponCode
+      properties:
+        couponCode:
+          type: string
+          description: The coupon code to apply
+          minLength: 1
+          example: SAVE20
+    ValidateCouponRequest:
+      type: object
+      required:
+        - couponCode
+        - cartId
+      properties:
+        couponCode:
+          type: string
+          description: The coupon code to validate
+          minLength: 1
+          example: SAVE20
+        cartId:
+          type: string
+          description: The cart identifier
+          minLength: 1
+          example: cart123
+    CartResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Cart unique identifier
+          example: cart123
+        userId:
+          type: string
+          description: User identifier (null for guest users)
+          example: user456
+          nullable: true
+        items:
+          type: array
+          description: List of items in the cart
+          items:
+            $ref: '#/components/schemas/CartItem'
+        total:
+          type: number
+          format: double
+          description: Total cart amount after discount
+          example: 89.99
+        appliedCoupon:
+          type: string
+          description: Applied coupon code
+          example: SAVE20
+          nullable: true
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Cart item identifier
+          example: item789
+        productId:
+          type: string
+          description: Product identifier
+          example: prod101
+        quantity:
+          type: integer
+          description: Quantity of the product
+          example: 2
+        price:
+          type: number
+          format: double
+          description: Price per unit
+          example: 49.99
+    CouponValidationResult:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: Whether the coupon is valid
+          example: true
+        couponCode:
+          type: string
+          description: The validated coupon code
+          example: SAVE20
+        discountType:
+          type: string
+          description: Type of discount (PERCENTAGE or FIXED)
+          enum:
+            - PERCENTAGE
+            - FIXED
+          example: PERCENTAGE
+        discountValue:
+          type: number
+          format: double
+          description: Discount value
+          example: 20.0
+        expiryDate:
+          type: string
+          format: date
+          description: Coupon expiry date
+          example: 2026-12-31
+        minCartValue:
+          type: number
+          format: double
+          description: Minimum cart value required
+          example: 50.0
+        message:
+          type: string
+          description: Validation message
+          example: Coupon is valid and applicable
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: 2026-01-08T12:00:00Z
+        traceId:
+          type: string
+          description: Trace identifier for debugging
+          example: abc123xyz
+        errorCode:
+          type: string
+          description: Application-specific error code
+          example: COUPON_INVALID
+        message:
+          type: string
+          description: Human-readable error message
+          example: Coupon code invalid or expired
+        details:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name that caused the error
+          example: couponCode
+        issue:
+          type: string
+          description: Description of the issue
+          example: Coupon code has expired
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authenticated users
+security:
+  - bearerAuth: []
