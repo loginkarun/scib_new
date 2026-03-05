@@ -2,30 +2,26 @@ openapi: 3.0.3
 info:
   title: scib_new API
   version: 1.0.0
-  description: Generated from LLD batch - Complete API specification for coupon management in shopping cart
+  description: Generated from LLD batch - Complete API specification for cart coupon management
 servers:
   - url: https://api.example.com
     description: Production server
-  - url: https://staging-api.example.com
-    description: Staging server
 tags:
-  - name: Cart Coupon Management
-    description: Operations for applying and removing coupons in shopping cart
-  - name: Coupon Validation
-    description: Operations for validating coupon codes
+  - name: cart-coupon
+    description: Cart coupon management operations
 paths:
   /api/cart/{cartId}/coupon:
     post:
       tags:
-        - Cart Coupon Management
+        - cart-coupon
       summary: Apply coupon to cart
-      description: Applies a valid coupon code to the shopping cart and updates the cart total with the discount
-      operationId: SCRUM-11693_applyCoupon_post
+      description: Applies a valid coupon code to the specified cart and updates the cart total
+      operationId: SCRUM-11693_apply_coupon_post
       parameters:
         - name: cartId
           in: path
           required: true
-          description: Unique identifier of the shopping cart
+          description: Unique identifier of the cart
           schema:
             type: string
             minLength: 1
@@ -35,11 +31,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ApplyCouponRequest'
-            examples:
-              validCoupon:
-                summary: Valid coupon code
-                value:
-                  couponCode: SAVE20
       responses:
         '201':
           description: Coupon applied successfully
@@ -47,70 +38,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartResponse'
-              examples:
-                success:
-                  summary: Successful coupon application
-                  value:
-                    cartId: cart123
-                    userId: user456
-                    items:
-                      - productId: prod001
-                        quantity: 2
-                        price: 29.99
-                        subtotal: 59.98
-                    subtotal: 59.98
-                    discount: 11.99
-                    total: 48.00
-                    appliedCoupon:
-                      code: SAVE20
-                      discountType: PERCENTAGE
-                      discountValue: 20
         '400':
-          description: Invalid request or coupon validation failed
+          description: Bad request - Invalid coupon code or validation error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                invalidCoupon:
-                  summary: Invalid or expired coupon
-                  value:
-                    timestamp: '2026-01-08T12:00:00Z'
-                    traceId: trace-12345
-                    errorCode: COUPON_INVALID
-                    message: Coupon code invalid or expired
-                    details:
-                      - field: couponCode
-                        issue: Coupon code does not exist or has expired
         '401':
-          description: Unauthenticated request
+          description: Unauthorized - Authentication required
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
-          description: Unauthorized access to cart
+          description: Forbidden - User cannot access this cart
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Cart not found
+          description: Not found - Cart or coupon not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                cartNotFound:
-                  summary: Cart does not exist
-                  value:
-                    timestamp: '2026-01-08T12:00:00Z'
-                    traceId: trace-12346
-                    errorCode: CART_NOT_FOUND
-                    message: Cart not found
-                    details:
-                      - field: cartId
-                        issue: The specified cart does not exist
         '500':
           description: Internal server error
           content:
@@ -121,41 +72,41 @@ paths:
         - bearerAuth: []
     delete:
       tags:
-        - Cart Coupon Management
+        - cart-coupon
       summary: Remove coupon from cart
-      description: Removes the applied coupon from the shopping cart and recalculates the cart total to original amount
-      operationId: SCRUM-11693_removeCoupon_delete
+      description: Removes the applied coupon from the specified cart and recalculates the cart total
+      operationId: SCRUM-11693_remove_coupon_delete
       parameters:
         - name: cartId
           in: path
           required: true
-          description: Unique identifier of the shopping cart
+          description: Unique identifier of the cart
           schema:
             type: string
             minLength: 1
       responses:
         '204':
-          description: Coupon removed successfully (no content returned)
+          description: Coupon removed successfully
         '400':
-          description: Invalid request
+          description: Bad request - Validation error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
-          description: Unauthenticated request
+          description: Unauthorized - Authentication required
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
-          description: Unauthorized access to cart
+          description: Forbidden - User cannot access this cart
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Cart not found
+          description: Not found - Cart not found
           content:
             application/json:
               schema:
@@ -171,22 +122,16 @@ paths:
   /api/coupon/validate:
     post:
       tags:
-        - Coupon Validation
+        - cart-coupon
       summary: Validate coupon code
-      description: Validates a coupon code for applicability to a specific cart without applying it
-      operationId: SCRUM-11693_validateCoupon_post
+      description: Validates a coupon code for applicability to a specific cart
+      operationId: SCRUM-11693_validate_coupon_post
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ValidateCouponRequest'
-            examples:
-              validRequest:
-                summary: Valid validation request
-                value:
-                  couponCode: SAVE20
-                  cartId: cart123
       responses:
         '200':
           description: Coupon validation result
@@ -194,30 +139,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CouponValidationResult'
-              examples:
-                validCoupon:
-                  summary: Valid coupon
-                  value:
-                    valid: true
-                    couponCode: SAVE20
-                    discountType: PERCENTAGE
-                    discountValue: 20
-                    message: Coupon is valid and applicable
-                    estimatedDiscount: 11.99
-                invalidCoupon:
-                  summary: Invalid coupon
-                  value:
-                    valid: false
-                    couponCode: EXPIRED10
-                    message: Coupon has expired
         '400':
-          description: Invalid request
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - User cannot access this cart
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Cart or coupon not found
+          description: Not found - Cart or coupon not found
           content:
             application/json:
               schema:
@@ -239,11 +180,9 @@ components:
       properties:
         couponCode:
           type: string
-          description: The coupon code to apply to the cart
           minLength: 1
-          maxLength: 50
+          description: The coupon code to apply
           example: SAVE20
-      description: Request body for applying a coupon to cart
     ValidateCouponRequest:
       type: object
       required:
@@ -252,142 +191,73 @@ components:
       properties:
         couponCode:
           type: string
-          description: The coupon code to validate
           minLength: 1
-          maxLength: 50
+          description: The coupon code to validate
           example: SAVE20
         cartId:
           type: string
-          description: The cart ID to validate the coupon against
           minLength: 1
+          description: The cart ID to validate the coupon against
           example: cart123
-      description: Request body for validating a coupon
     CartResponse:
       type: object
-      required:
-        - cartId
-        - items
-        - subtotal
-        - total
       properties:
-        cartId:
+        id:
           type: string
-          description: Unique identifier of the cart
+          description: Unique cart identifier
           example: cart123
         userId:
           type: string
           description: User ID (null for guest users)
-          nullable: true
           example: user456
+          nullable: true
         items:
           type: array
           description: List of items in the cart
           items:
             $ref: '#/components/schemas/CartItem'
-        subtotal:
-          type: number
-          format: double
-          description: Cart subtotal before discount
-          minimum: 0
-          example: 59.98
-        discount:
-          type: number
-          format: double
-          description: Total discount amount applied
-          minimum: 0
-          example: 11.99
         total:
           type: number
           format: double
-          description: Final cart total after discount
-          minimum: 0
-          example: 48.00
+          description: Total cart amount after discount
+          example: 89.99
+        originalTotal:
+          type: number
+          format: double
+          description: Original cart amount before discount
+          example: 99.99
         appliedCoupon:
-          $ref: '#/components/schemas/Coupon'
+          type: string
+          description: Applied coupon code
+          example: SAVE20
           nullable: true
-      description: Response containing cart details with applied coupon information
+        discountAmount:
+          type: number
+          format: double
+          description: Discount amount applied
+          example: 10.00
     CartItem:
       type: object
-      required:
-        - productId
-        - quantity
-        - price
-        - subtotal
       properties:
+        id:
+          type: string
+          description: Cart item identifier
+          example: item789
         productId:
           type: string
-          description: Unique identifier of the product
+          description: Product identifier
           example: prod001
-        productName:
-          type: string
-          description: Name of the product
-          example: Wireless Mouse
         quantity:
           type: integer
-          description: Quantity of the product in cart
-          minimum: 1
+          description: Quantity of the product
           example: 2
         price:
           type: number
           format: double
-          description: Unit price of the product
-          minimum: 0
-          example: 29.99
-        subtotal:
-          type: number
-          format: double
-          description: Subtotal for this item (quantity * price)
-          minimum: 0
-          example: 59.98
-      description: Individual item in the shopping cart
-    Coupon:
-      type: object
-      required:
-        - code
-        - discountType
-        - discountValue
-      properties:
-        code:
-          type: string
-          description: Unique coupon code
-          example: SAVE20
-        discountType:
-          type: string
-          description: Type of discount
-          enum:
-            - PERCENTAGE
-            - FIXED_AMOUNT
-          example: PERCENTAGE
-        discountValue:
-          type: number
-          format: double
-          description: Discount value (percentage or fixed amount)
-          minimum: 0
-          example: 20
-        expiryDate:
-          type: string
-          format: date
-          description: Expiry date of the coupon
-          example: '2026-12-31'
-        minCartValue:
-          type: number
-          format: double
-          description: Minimum cart value required to apply coupon
-          minimum: 0
-          example: 50.00
-        applicableItems:
-          type: array
-          description: List of product IDs this coupon applies to (empty means all products)
-          items:
-            type: string
-          example: []
-      description: Coupon details
+          description: Price per unit
+          example: 49.99
     CouponValidationResult:
       type: object
-      required:
-        - valid
-        - couponCode
-        - message
       properties:
         valid:
           type: boolean
@@ -399,28 +269,36 @@ components:
           example: SAVE20
         discountType:
           type: string
-          description: Type of discount (if valid)
           enum:
             - PERCENTAGE
             - FIXED_AMOUNT
+          description: Type of discount
           example: PERCENTAGE
         discountValue:
           type: number
           format: double
-          description: Discount value (if valid)
-          minimum: 0
-          example: 20
+          description: Discount value (percentage or fixed amount)
+          example: 20.0
+        minCartValue:
+          type: number
+          format: double
+          description: Minimum cart value required
+          example: 50.0
+        expiryDate:
+          type: string
+          format: date
+          description: Coupon expiry date
+          example: 2026-12-31
         message:
           type: string
           description: Validation message
           example: Coupon is valid and applicable
-        estimatedDiscount:
-          type: number
-          format: double
-          description: Estimated discount amount for the cart
-          minimum: 0
-          example: 11.99
-      description: Result of coupon validation
+        applicableItems:
+          type: array
+          description: List of product IDs this coupon applies to (empty if applies to all)
+          items:
+            type: string
+          example: []
     ErrorResponse:
       type: object
       required:
@@ -432,12 +310,12 @@ components:
         timestamp:
           type: string
           format: date-time
-          description: Timestamp when the error occurred
-          example: '2026-01-08T12:00:00Z'
+          description: Error timestamp
+          example: 2026-01-08T12:00:00Z
         traceId:
           type: string
-          description: Unique trace ID for tracking the error
-          example: trace-12345
+          description: Unique trace identifier for debugging
+          example: abc123xyz
         errorCode:
           type: string
           description: Application-specific error code
@@ -446,21 +324,13 @@ components:
           type: string
           description: Human-readable error message
           example: Coupon code invalid or expired
-        path:
-          type: string
-          description: API path where error occurred
-          example: /api/cart/123/coupon
         details:
           type: array
           description: Detailed error information
           items:
             $ref: '#/components/schemas/ErrorDetail'
-      description: Standard error response structure
     ErrorDetail:
       type: object
-      required:
-        - field
-        - issue
       properties:
         field:
           type: string
@@ -469,47 +339,50 @@ components:
         issue:
           type: string
           description: Description of the issue
-          example: Coupon code does not exist or has expired
-      description: Detailed error information for a specific field
+          example: Coupon code has expired
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: JWT token-based authentication
+      description: JWT token for authentication
   parameters:
     cartIdParam:
       name: cartId
       in: path
       required: true
-      description: Unique identifier of the shopping cart
+      description: Unique identifier of the cart
       schema:
         type: string
         minLength: 1
   responses:
     UnauthorizedError:
-      description: Authentication token is missing or invalid
+      description: Authentication required
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     ForbiddenError:
-      description: User does not have permission to access this resource
+      description: Access forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     NotFoundError:
-      description: The requested resource was not found
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
-      description: An unexpected error occurred on the server
+      description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-security:
-  - bearerAuth: []
