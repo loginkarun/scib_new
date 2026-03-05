@@ -1,61 +1,97 @@
 {
-  "executive_summary": "Build workflow dispatch failed with HTTP 500 Internal Server Error. No Maven build was executed due to GitHub Actions workflow dispatch failure.",
+  "executive_summary": "Build workflow dispatch failed with HTTP 500 Internal Server Error. No Maven build was executed as the GitHub Actions workflow could not be triggered.",
+  "attempt_number": 1,
+  "action_url": "",
+  "timestamp": "2024-01-XX",
   "errors": [
     {
+      "error_id": "ERR-001",
       "category": "CONFIGURATION_ERROR",
       "severity": "CRITICAL",
       "error_type": "Workflow Dispatch Failure",
-      "description": "GitHub Actions workflow dispatch returned HTTP 500 Internal Server Error",
-      "error_message": "Failed to run workflow dispatch",
-      "location": "GitHub Actions API",
-      "dispatch_url": "https://api.github.com/repos/loginkarun/scib_new/actions/workflows/.github%2Fworkflows%2Fbuild.yml/dispatches",
-      "root_cause": "GitHub API returned 500 error when attempting to trigger workflow. This could be due to: 1) Invalid workflow file path or configuration, 2) GitHub API service issues, 3) Repository permissions or authentication problems, 4) Workflow file syntax errors preventing dispatch",
-      "recommended_fix": [
-        "Verify workflow file exists at .github/workflows/build.yml",
-        "Check workflow file syntax is valid YAML",
-        "Verify GitHub token has 'workflow' scope permissions",
-        "Check repository settings allow Actions to run",
-        "Review workflow triggers and ensure dispatch event is properly configured",
-        "If GitHub API is experiencing issues, retry after some time",
-        "Validate the workflow file has proper 'workflow_dispatch' trigger defined"
-      ],
-      "automated_remediation": {
-        "action": "VALIDATE_WORKFLOW_FILE",
-        "steps": [
-          "Read .github/workflows/build.yml to verify it exists",
-          "Parse YAML syntax to detect configuration errors",
-          "Verify workflow_dispatch trigger is present",
-          "Check required inputs are properly defined",
-          "Validate job definitions and steps syntax"
-        ]
+      "description": "GitHub Actions workflow dispatch failed with HTTP 500 Internal Server Error",
+      "error_message": "HTTP Error 500: Internal Server Error. Failed to run workflow dispatch",
+      "location": {
+        "workflow_file": ".github/workflows/build.yml",
+        "dispatch_url": "https://api.github.com/repos/loginkarun/scib_new/actions/workflows/.github%2Fworkflows%2Fbuild.yml/dispatches"
       },
-      "compliance_notes": "Workflow dispatch failures must be logged for audit trail. Verify CI/CD pipeline security controls are not blocking legitimate workflow triggers.",
-      "impact": "Complete build pipeline blockage - no build execution possible until workflow dispatch is fixed"
+      "root_cause": "GitHub API returned 500 error when attempting to dispatch the workflow. This could be due to: 1) Invalid workflow file syntax, 2) Missing or incorrect workflow_dispatch trigger, 3) GitHub API temporary outage, 4) Repository permissions issue, 5) Workflow file not found at specified path",
+      "impact": "Build cannot be executed. No Maven compilation or tests can run until workflow dispatch is fixed.",
+      "automated_fix": {
+        "fix_type": "WORKFLOW_CONFIGURATION",
+        "priority": "P0",
+        "steps": [
+          "1. Verify .github/workflows/build.yml exists in repository",
+          "2. Ensure workflow has 'workflow_dispatch' trigger defined",
+          "3. Validate YAML syntax of build.yml",
+          "4. Check repository permissions for GitHub Actions",
+          "5. Verify GitHub token has 'workflow' scope",
+          "6. Retry dispatch after validation"
+        ],
+        "remediation_script": "validate_workflow_file.sh",
+        "estimated_fix_time": "5-10 minutes",
+        "requires_manual_intervention": true
+      },
+      "compliance_notes": {
+        "audit_trail": "Workflow dispatch failure logged at attempt-1",
+        "security_impact": "None - configuration issue only",
+        "change_control": "Requires validation of workflow configuration before retry"
+      }
     }
   ],
   "summary": {
     "total_errors": 1,
     "critical_errors": 1,
+    "high_priority_errors": 0,
+    "medium_priority_errors": 0,
+    "low_priority_errors": 0,
     "error_categories": {
-      "CONFIGURATION_ERROR": 1
+      "CONFIGURATION_ERROR": 1,
+      "TEST_FAILURE": 0,
+      "COMPILATION_ERROR": 0,
+      "DEPENDENCY_ERROR": 0,
+      "PLUGIN_FAILURE": 0,
+      "PORT_CONFLICT": 0,
+      "VALIDATION_ERROR": 0
     },
-    "build_stage": "PRE_BUILD",
     "build_status": "DISPATCH_FAILED",
-    "maven_build_executed": false,
-    "actionable_fixes": 7
+    "can_auto_remediate": false,
+    "requires_manual_review": true,
+    "next_steps": [
+      "Validate workflow file exists and has correct syntax",
+      "Ensure workflow_dispatch trigger is configured",
+      "Check GitHub Actions permissions",
+      "Verify repository settings allow workflow dispatch",
+      "Retry build after configuration fixes"
+    ]
   },
-  "attempt_number": 1,
-  "action_url": "",
-  "timestamp": "2025-01-17T00:00:00Z",
-  "repository": "scib_new",
-  "branch": "main",
+  "recommendations": [
+    {
+      "priority": "IMMEDIATE",
+      "action": "Verify .github/workflows/build.yml file exists and contains valid YAML",
+      "rationale": "Workflow file must exist and be valid for dispatch to succeed"
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Add or verify 'workflow_dispatch' trigger in build.yml",
+      "rationale": "Workflow must have workflow_dispatch trigger to be manually dispatched"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Check GitHub Actions permissions in repository settings",
+      "rationale": "Repository must allow GitHub Actions and workflow dispatch"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Validate GitHub token has required scopes (repo, workflow)",
+      "rationale": "Token must have workflow scope to dispatch workflows"
+    }
+  ],
   "audit_log": {
-    "analyzed_by": "Senior DevOps Automation Engineer - Build Error Classifier Agent",
-    "analysis_timestamp": "2025-01-17T00:00:00Z",
-    "log_source": "logs/build_failure_attempt-1.json",
-    "classification_confidence": "HIGH",
-    "requires_manual_intervention": true,
-    "escalation_required": true,
-    "next_steps": "Validate workflow configuration before attempting next build"
+    "analysis_timestamp": "2024-01-XX",
+    "analyzer_version": "1.0.0",
+    "compliance_status": "NON_COMPLIANT",
+    "requires_approval": true,
+    "approval_reason": "Critical configuration error preventing build execution"
   }
 }
