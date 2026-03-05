@@ -2,15 +2,13 @@ package com.myproject.models.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for validating coupon code
+ * DTO for validating coupon request.
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidateCouponRequest {
