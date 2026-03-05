@@ -1,1 +1,0 @@
-{"status":"success","attempts":1,"api_url":"https://int-ai.aava.ai/workflows/workflow-executions/c34b4f00-4e3a-4a74-a106-09ade49e9da2","repo":"scib_new","branch":"main","source_folder":"code","last_error":"","non_retryable":false,"history":[{"attempt":1,"fix_workflow_execution_id":"c34b4f00-4e3a-4a74-a106-09ade49e9da2","status":"triggered"}]}
