@@ -1,0 +1,71 @@
+{
+  "attempt_number": 3,
+  "timestamp": "2025-01-08T10:45:00Z",
+  "repository": "loginkarun/scib_new",
+  "branch": "main",
+  "commit_sha": "ab50c13e3371d5d12007987edff149cdb15532c7",
+  "fixes_applied": [
+    {
+      "error_id": "ERR-001",
+      "file": "code/src/main/java/com/myproject/models/dtos/ApplyCouponRequest.java",
+      "fix_description": "Added @Builder annotation to enable builder pattern usage in test classes",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data"
+    },
+    {
+      "error_id": "ERR-002",
+      "file": "code/src/main/java/com/myproject/models/dtos/CartItem.java",
+      "fix_description": "Added @Builder annotation to enable builder pattern usage in CartServiceImpl",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data"
+    },
+    {
+      "error_id": "ERR-003",
+      "file": "code/src/main/java/com/myproject/models/dtos/CartResponse.java",
+      "fix_description": "Added @Builder annotation to enable builder pattern usage in CartServiceImpl.toCartResponse()",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data"
+    },
+    {
+      "error_id": "ERR-004",
+      "file": "code/src/main/java/com/myproject/models/dtos/ErrorDetail.java",
+      "fix_description": "Added @Builder annotation to enable builder pattern usage in GlobalExceptionHandler",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data"
+    },
+    {
+      "error_id": "ERR-005",
+      "file": "code/src/main/java/com/myproject/models/dtos/ErrorResponse.java",
+      "fix_description": "Added @Builder annotation and removed custom constructor to enable builder pattern usage in GlobalExceptionHandler",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data, removed custom constructor that conflicted with Lombok annotations"
+    },
+    {
+      "error_id": "ERR-006",
+      "file": "code/src/main/java/com/myproject/models/dtos/ValidateCouponRequest.java",
+      "fix_description": "Added @Builder annotation to enable builder pattern usage in CouponControllerTest",
+      "change_type": "ANNOTATION_ADDITION",
+      "lines_modified": "Added import lombok.Builder and @Builder annotation after @Data"
+    }
+  ],
+  "summary": {
+    "total_files_fixed": 6,
+    "total_errors_addressed": 6,
+    "critical_errors_fixed": 3,
+    "high_errors_fixed": 3,
+    "fix_strategy": "Added missing @Builder Lombok annotation to all DTO classes that use builder pattern in service and test code. Preserved all existing annotations (@Data, @NoArgsConstructor, @AllArgsConstructor) and validation constraints. No changes made to business logic or configuration."
+  },
+  "verification_status": "PENDING_BUILD",
+  "next_steps": [
+    "Trigger GitHub Actions build to verify compilation success",
+    "Monitor build logs for any remaining errors",
+    "Verify JaCoCo plugin execution and coverage report generation",
+    "Confirm all tests pass successfully"
+  ],
+  "compliance_notes": {
+    "audit_trail": "All fixes applied as minimal patches to existing files. No configuration changes made. JaCoCo plugin (0.8.11) with prepare-agent and report goals preserved. Maven compiler plugin annotation processor configuration unchanged.",
+    "code_review_required": false,
+    "breaking_changes": false,
+    "backward_compatible": true
+  }
+}
