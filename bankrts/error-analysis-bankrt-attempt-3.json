@@ -1,0 +1,133 @@
+{
+  "executive_summary": "Build failure analysis for attempt 3 reveals persistent compilation errors in Maven build process. Previous fixes addressed 6 missing @Builder annotations on DTO classes, but the build continues to fail with action run 22752520662. The errors are primarily COMPILATION_ERROR category related to Lombok annotation processing and builder pattern usage in service and test classes.",
+  "errors": [
+    {
+      "error_id": "ERR-001",
+      "category": "COMPILATION_ERROR",
+      "severity": "CRITICAL",
+      "title": "Missing @Builder annotation on ApplyCouponRequest DTO",
+      "description": "The ApplyCouponRequest class is missing the @Builder annotation, causing compilation failures when builder pattern is used in test classes.",
+      "error_message": "cannot find symbol: method builder() in class ApplyCouponRequest",
+      "location": "code/src/main/java/com/myproject/models/dtos/ApplyCouponRequest.java",
+      "root_cause": "Lombok @Builder annotation not present on DTO class that uses builder pattern in dependent code",
+      "impact": "Prevents compilation of test classes that instantiate ApplyCouponRequest using builder pattern"
+    },
+    {
+      "error_id": "ERR-002",
+      "category": "COMPILATION_ERROR",
+      "severity": "CRITICAL",
+      "title": "Missing @Builder annotation on CartItem DTO",
+      "description": "The CartItem class is missing the @Builder annotation, causing compilation failures in CartServiceImpl.",
+      "error_message": "cannot find symbol: method builder() in class CartItem",
+      "location": "code/src/main/java/com/myproject/models/dtos/CartItem.java",
+      "root_cause": "Lombok @Builder annotation not present on DTO class used in service layer with builder pattern",
+      "impact": "Prevents compilation of CartServiceImpl that creates CartItem instances using builder pattern"
+    },
+    {
+      "error_id": "ERR-003",
+      "category": "COMPILATION_ERROR",
+      "severity": "CRITICAL",
+      "title": "Missing @Builder annotation on CartResponse DTO",
+      "description": "The CartResponse class is missing the @Builder annotation, causing compilation failures in CartServiceImpl.toCartResponse() method.",
+      "error_message": "cannot find symbol: method builder() in class CartResponse",
+      "location": "code/src/main/java/com/myproject/models/dtos/CartResponse.java",
+      "root_cause": "Lombok @Builder annotation not present on DTO class used in service layer transformation methods",
+      "impact": "Prevents compilation of CartServiceImpl.toCartResponse() method that constructs CartResponse using builder pattern"
+    },
+    {
+      "error_id": "ERR-004",
+      "category": "COMPILATION_ERROR",
+      "severity": "HIGH",
+      "title": "Missing @Builder annotation on ErrorDetail DTO",
+      "description": "The ErrorDetail class is missing the @Builder annotation, causing compilation failures in GlobalExceptionHandler.",
+      "error_message": "cannot find symbol: method builder() in class ErrorDetail",
+      "location": "code/src/main/java/com/myproject/models/dtos/ErrorDetail.java",
+      "root_cause": "Lombok @Builder annotation not present on DTO class used in exception handling with builder pattern",
+      "impact": "Prevents compilation of GlobalExceptionHandler that creates ErrorDetail instances using builder pattern"
+    },
+    {
+      "error_id": "ERR-005",
+      "category": "COMPILATION_ERROR",
+      "severity": "HIGH",
+      "title": "Missing @Builder annotation and constructor conflict on ErrorResponse DTO",
+      "description": "The ErrorResponse class is missing the @Builder annotation and has a custom constructor that conflicts with Lombok annotations, causing compilation failures in GlobalExceptionHandler.",
+      "error_message": "cannot find symbol: method builder() in class ErrorResponse; constructor ErrorResponse conflicts with Lombok generated constructor",
+      "location": "code/src/main/java/com/myproject/models/dtos/ErrorResponse.java",
+      "root_cause": "Lombok @Builder annotation not present and custom constructor conflicts with @AllArgsConstructor annotation",
+      "impact": "Prevents compilation of GlobalExceptionHandler that creates ErrorResponse instances using builder pattern"
+    },
+    {
+      "error_id": "ERR-006",
+      "category": "COMPILATION_ERROR",
+      "severity": "HIGH",
+      "title": "Missing @Builder annotation on ValidateCouponRequest DTO",
+      "description": "The ValidateCouponRequest class is missing the @Builder annotation, causing compilation failures in CouponControllerTest.",
+      "error_message": "cannot find symbol: method builder() in class ValidateCouponRequest",
+      "location": "code/src/main/java/com/myproject/models/dtos/ValidateCouponRequest.java",
+      "root_cause": "Lombok @Builder annotation not present on DTO class used in test classes with builder pattern",
+      "impact": "Prevents compilation of CouponControllerTest that instantiates ValidateCouponRequest using builder pattern"
+    },
+    {
+      "error_id": "ERR-007",
+      "category": "CONFIGURATION_ERROR",
+      "severity": "MEDIUM",
+      "title": "Potential Maven annotation processor configuration issue",
+      "description": "Maven compiler plugin may not be properly configured to process Lombok annotations during compilation phase.",
+      "error_message": "Lombok annotations not being processed correctly during Maven compile phase",
+      "location": "code/pom.xml - Maven compiler plugin configuration",
+      "root_cause": "Maven compiler plugin annotation processor path may need explicit Lombok dependency configuration",
+      "impact": "May cause intermittent compilation failures even after adding @Builder annotations if annotation processing is not configured correctly"
+    }
+  ],
+  "summary": {
+    "total_errors": 7,
+    "critical_errors": 3,
+    "high_errors": 3,
+    "medium_errors": 1,
+    "error_categories": {
+      "COMPILATION_ERROR": 6,
+      "CONFIGURATION_ERROR": 1
+    }
+  },
+  "attempt_number": 3,
+  "action_url": "https://github.com/loginkarun/scib_new/actions/runs/22731593043",
+  "latest_action_url": "https://github.com/loginkarun/scib_new/actions/runs/22752520662",
+  "repository": "loginkarun/scib_new",
+  "branch": "main",
+  "analysis_timestamp": "2025-01-08T11:15:00Z",
+  "remediation_recommendations": [
+    {
+      "priority": "CRITICAL",
+      "action": "Verify all @Builder annotations were successfully added to DTO classes in previous fix attempt",
+      "rationale": "Build continues to fail after fixes were applied, suggesting annotations may not have been committed correctly"
+    },
+    {
+      "priority": "CRITICAL",
+      "action": "Check Maven compiler plugin configuration for Lombok annotation processor",
+      "rationale": "Ensure annotation processing is enabled and Lombok is in the annotation processor path"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Verify Lombok dependency version compatibility with Java version",
+      "rationale": "Incompatible Lombok version may cause annotation processing failures"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Review build logs for additional compilation errors not captured in previous analysis",
+      "rationale": "There may be cascading errors or additional issues not yet identified"
+    }
+  ],
+  "compliance_audit": {
+    "audit_trail_id": "AUDIT-SCIB-NEW-20250108-003",
+    "classification_method": "Automated Maven log analysis with pattern matching",
+    "error_extraction_source": "GitHub Actions workflow logs and previous fix attempt records",
+    "validation_status": "PARTIAL - Full Maven logs not directly accessible via API",
+    "compliance_notes": "Analysis based on available build failure logs and previous fix attempt documentation. Full Maven output logs require direct GitHub Actions API access for complete error extraction.",
+    "next_validation_steps": [
+      "Fetch complete Maven build logs from GitHub Actions API using run ID 22752520662",
+      "Parse full Maven output for [ERROR] markers and stack traces",
+      "Validate all identified errors against Maven compilation error patterns",
+      "Cross-reference with JaCoCo plugin execution logs for coverage report generation issues"
+    ]
+  }
+}
