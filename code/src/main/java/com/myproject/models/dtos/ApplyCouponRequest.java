@@ -2,6 +2,7 @@ package com.myproject.models.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
  * DTO for applying coupon to cart request.
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyCouponRequest {

@@ -1,6 +1,7 @@
 package com.myproject.models.dtos;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * DTO for error response.
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
@@ -20,11 +22,4 @@ public class ErrorResponse {
     private String errorCode;
     private String message;
     private List<ErrorDetail> details;
-    
-    public ErrorResponse(String errorCode, String message) {
-        this.timestamp = LocalDateTime.now();
-        this.traceId = java.util.UUID.randomUUID().toString();
-        this.errorCode = errorCode;
-        this.message = message;
-    }
 }
